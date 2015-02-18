@@ -125,6 +125,7 @@ load.package(jsonlite)
 apa.test = fromJSON("apa.json")
 apa.test.content = apa.test$ergebnis
 # class(apa.test.content) #jsonlite should be able to convert JSON to dataframe
+# will be done in future
 apa.test.meta = apa.test$meta
 ```
 
