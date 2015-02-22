@@ -1,0 +1,47 @@
+---
+title: "DataFromDGAPTwitter"
+output: html_document
+---
+
+get require packages - twitteR and devtools
+
+```{r}
+load.package = function(package.name){
+  package.name = as.character(substitute(package.name))
+  if(require(package.name, character.only = TRUE)) { 
+    message(paste(package.name, ' loaded', sep = ""))
+  } else {
+    install.packages(package.name, dependencies = TRUE)
+  }
+}
+
+load.package(twitteR)
+load.package(devtools)
+
+library("twitteR")
+library("devtools")
+```
+
+authentication with twitter
+
+```{r, echo=FALSE}
+api_key <- "Ujuavand1a2DT2S2HjKgR7VW3"
+api_secret <- "XmDZBahv6iLWooX1zC0d0iNu9zB5gOuUCPt95nxs7slNn0wnqY"
+access_token <- "121983017-OO9hi0T0hmq7QClfZkIXV7hOlgoDG7JRIt1yLCFM"
+access_token_secret <- "oj0tjUUX3sXq9ogIi3RBHZnP8AL30rxOG906rxtiZTonS"
+setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
+```
+
+
+now we can use userTimeline function, there is no arguments to give start time and end time
+but there is twitter id, that we can use to remove duplicate twitters in each twitter abstraction.
+
+```{r}
+dgap_tweets <- userTimeline("DGAP_Ad_hoc")
+```
+
+
+create data frame
+```{r}
+tweets_df <- twListToDF(dgap_tweets)
+```
