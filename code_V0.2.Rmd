@@ -7,6 +7,14 @@ output: html_document
 - Check if json import is handled correctly in load.data function
 - Implement language filtering for data retrieval
 
+by next week:
+- write function to generate API url for presseportal (Christoph)
+  - language option (EN/DE)
+  - option to load xml or json
+  - number of entries or time horizon
+- consolidate all functions to 1.read data 2.write to dataframe/corpus (Ashish)
+- create a package out of this (?)
+
 
 # Generic functions:
 ```{r}
