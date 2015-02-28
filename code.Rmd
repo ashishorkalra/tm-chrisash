@@ -2,20 +2,6 @@
 title: "code"
 output: html_document
 ---
-# Notes
-
-- Check if json import is handled correctly in load.data function
-- Implement language filtering for data retrieval
-
-by next week:
-- write function to generate API url for presseportal (Christoph - done)
-  - language option (EN/DE)
-  - option to load xml or json
-  - number of entries or time horizon
-- consolidate all functions to 1.read data 2.write to dataframe/corpus (Ashish)
-- create a package out of this (?)
-
-
 # Generic functions:
 ```{r}
 ##################################################################################
@@ -82,7 +68,7 @@ apa.query = function(AppID, lang = "en", channel="", content="alle",
   to   = date2unix(date.to)
  
 language = switch(lang,                    
-            en  = "%28slugline%3D%22euro+adhoc%22+and+%28end+of+announcement%29%29",
+            en  = "%28slugline%3D%22euro+adhoc%22+and+%28end+of+announcement%29%29",- Check if json import is handl
             de  = "%28%22euro+adhoc%22+and+%28Ende+der+Mitteilung%29%29")
   
   apa.url = paste("http://www.ots.at/api/liste?app=", AppID,
@@ -193,3 +179,14 @@ Wordclouds etc?
 ```
 
 
+# To-Dos
+
+- Check if json import is handled correctly in load.data function
+
+## by next week:
+- write function to generate API url for presseportal (Christoph - done)
+  - language option (EN/DE - done)
+  - option to load xml or json (done)
+  - number of entries or time horizon (done)
+- consolidate all functions to 1.read data 2.write to dataframe/corpus (Ashish)
+- create a package out of this (?)
