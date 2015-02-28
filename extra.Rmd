@@ -1,0 +1,71 @@
+---
+title: "extra"
+author: "ashish & christoph"
+date: "Saturday, February 28, 2015"
+output: html_document
+---
+
+
+
+
+
+apa api: 327be26c9e0ef236d9576720647c4d92
+dpp api: e79c7f82be0b69ec33710a6f5b1651f2
+
+# Data retrieval example links:
+http://api.presseportal.de/api/ir/adhoc?api_key=e79c7f82be0b69ec33710a6f5b1651f2&limt=20&start=0&format=json&lang=en&teaser=1
+
+http://www.ots.at/api/liste?app=327be26c9e0ef236d9576720647c4d92&query=%28slugline%3D%22euro+adhoc%22+and+%28end+of+announcement%29%29&channel=finanzen&inhalt=alle&von=1424991600&bis=1425164399&anz=10&format=json
+
+## RSS
+```{r}
+load.package(XML)
+
+xml.url = "http://www.ots.at/rss/finanzen/"
+
+rss_test = load.data(xml.url, type = "xml", file.name = "rss_test")
+
+dataframe.rss = xmlToDataFrame(rss_test)
+```
+
+## JSON
+```{r}
+# load.package(RJSONIO)
+# 
+# isValidJSON("apa.json")
+# apa.test = fromJSON(content = "apa.json")
+
+load.package(jsonlite)
+apa.test = fromJSON("apa.json")
+apa.test.content = apa.test$ergebnis
+# class(apa.test.content) #jsonlite should be able to convert JSON to dataframe
+# will be done in future
+apa.test.meta = apa.test$meta
+```
+
+## Twitter
+```{r}
+
+```
+
+
+# Data transformation:
+
+- SnowballC
+- ...
+
+```{r}
+
+```
+
+# Inspecting the text data:
+Wordclouds etc?
+
+# Analysis
+
+- RTextTools  
+
+```{r}
+
+```
+
