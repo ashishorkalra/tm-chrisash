@@ -118,6 +118,25 @@ load.package(jsonlite)
 # apa.dataframe =  fromJSON(print(quote=F, apa.data))
 # dpp.dataframe =  fromJSON(print(quote=F, dpp.data))
 ```
+
+
+
+As per the expectation, the data is in apa.data and dpp.data.
+```{r}
+
+load.package(rjson)
+require(rjson)
+
+apa.data.json <- fromJSON(print(quote=F,apa.data))
+
+dpp.data.json <- fromJSON(print(quote=F,dpp.data))
+
+```
+
+
+
+
+
 apa api: 327be26c9e0ef236d9576720647c4d92
 dpp api: e79c7f82be0b69ec33710a6f5b1651f2
 
