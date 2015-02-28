@@ -8,7 +8,7 @@ output: html_document
 - Implement language filtering for data retrieval
 
 by next week:
-- write function to generate API url for presseportal (Christoph)
+- write function to generate API url for presseportal (Christoph - done)
   - language option (EN/DE)
   - option to load xml or json
   - number of entries or time horizon
@@ -34,7 +34,7 @@ load.package = function(package.name){
 ## Load data from web or from disk if already stored
 ##################################################################################
 
-load.data = function(url, type = "xml", file.name, overwrite = FALSE){
+load.data = function(url, format = "xml", file.name, overwrite = FALSE){
   load.package(RCurl)
   
   if(file.exists(file.name) & overwrite == FALSE){
@@ -42,7 +42,7 @@ load.data = function(url, type = "xml", file.name, overwrite = FALSE){
     return(readRDS(file.name))
   } else {
     # print(2)
-    var = switch(type,                     #add additional data sources here
+    var = switch(format,                     #add additional data sources here
                  xml  = xmlParse(url),
                  json = getURL(url))       #check if correct! Pass apa.api urls?
     saveRDS(var, file = file.name)
@@ -60,61 +60,85 @@ unix2date = function(time.stamp){
   as.Date(as.POSIXct(val, origin="1970-01-01"))
 }
 
-date2unix = function(year, month, day){
+date2unix = function(ddmmyyyy.vec){
+  year  = ddmmyyyy.vec[3]
+  month = ddmmyyyy.vec[2]
+  day   = ddmmyyyy.vec[1]
   #returns UNIX time: seconds since 01.01.1970 GMT
   as.double(as.POSIXct(as.Date(paste(year, month, day, sep="-")))) 
 }
 
 ##################################################################################
-## Build APA query
+## Build APA/DPP query
 ##################################################################################
 # For example see: http://api.ots.at/wizard/ and
 # http://api.ots.at/doku/  for more details
 
-apa.query = function(AppID, channel="", content="alle", 
-                     from = 1422745200, to = 1422745200, 
+apa.query = function(AppID, lang = "en", channel="", content="alle", 
+                     date.from = c(01,01,2015), date.to = c(10,02,2015), 
                      number = 10, format = "json"){ 
-
-apa.url = paste("http://www.ots.at/api/liste?app=", AppID,
-                "&query=","",   
+  
+  from = date2unix(date.from)
+  to   = date2unix(date.to)
+ 
+language = switch(lang,                    
+            en  = "%28slugline%3D%22euro+adhoc%22+and+%28end+of+announcement%29%29",
+            de  = "%28%22euro+adhoc%22+and+%28Ende+der+Mitteilung%29%29")
+  
+  apa.url = paste("http://www.ots.at/api/liste?app=", AppID,
+                "&query=", language,           # en/de
                 "&channel=", channel,         # Finanzen, ...
                 "&inhalt=", content,          # filter for pdfs, images, ...
                 "&von=", from,                # unix time stamp
                 "&bis=", to,                  # unix time stamp
                 "&anz=", number,              # mind. , standard , max.
-                "&felder=", "",               # CHECK if that works! use %20 as space? see: http://api.ots.at/doku/
                 "&format=", format,           # json, rss
                 sep = "")
 
 return(apa.url)
 }
 
+dpp.query = function(AppID, limit = 50, start = 0, 
+                     format = "json", lang = "en", teaser = 1){
+                     
+  
+  dpp.url = paste("http://api.presseportal.de/api/ir/adhoc?api_key=", AppID,
+                  "&limt=", limit,          # 0-50
+                  "&start=", start,         # how many articles after latest
+                  "&format=", format,       # json, xml
+                  "&lang=", lang,           # en, de
+                  "&teaser=", teaser,       # teaser = 0/1
+                  sep = "")
+                  
+return(dpp.url)
+}
 
+##################################################################################
+## Run query
+##################################################################################
+# 1. generate url from APA/DPP
+apa.url = apa.query("327be26c9e0ef236d9576720647c4d92", format = "json")
+dpp.url = dpp.query("e79c7f82be0b69ec33710a6f5b1651f2", format = "json")
+
+# 2. pass url to load.data
+apa.data = load.data(url = apa.url, format = "json", 
+                     file.name = "apa.test", overwrite = F)
+dpp.data = load.data(url = dpp.url, format = "json", 
+                     file.name = "dpp.test", overwrite = F)
+
+# 3. write to dataframe
+load.package(jsonlite)
+
+# apa.dataframe =  fromJSON(print(quote=F, apa.data))
+# dpp.dataframe =  fromJSON(print(quote=F, dpp.data))
 ```
 apa api: 327be26c9e0ef236d9576720647c4d92
 dpp api: e79c7f82be0b69ec33710a6f5b1651f2
 
-# Data retrieval:
+# Data retrieval example links:
 http://api.presseportal.de/api/ir/adhoc?api_key=e79c7f82be0b69ec33710a6f5b1651f2&limt=20&start=0&format=json&lang=en&teaser=1
 
-http://api.ots.at/ (api allows specification of fields to be downloaded)
-
-APA finance free trial?:
-http://www.apa.at/Site/APA_PB_Finance_FinanceFeed.pdf
-
-Other possible sources:
-
-- WISO
-- DGAP: http://www.dgap.de/dgap/DGAP/Twitter/
-- https://www.brn-ag.de/person/1688/1 (summary of adhoc news, daily)
-- http://www.boerseradio.at/firma/346
-- http://library.pressdisplay.com/pressdisplay/de/viewer.aspx
-- RSS adhoc: http://www.rss-verzeichnis.de/nachrichten/ausland/1872-finanztreff-adhoc
-- http://wienerboerse.archiv.apa.at/ans/WBAG/liste.htm?lang=LANG_DE
-- http://webnews.pressetext.com/xml (XML & RSS for AUT, CH, DE)
-- http://www.ots.at/rss (Economy and adhoc!)
-
-Use economy news, unemployment, adhoc together?
+http://www.ots.at/api/liste?app=327be26c9e0ef236d9576720647c4d92&query=%28slugline%3D%22euro+adhoc%22+and+%28end+of+announcement%29%29&channel=finanzen&inhalt=alle&von=1424991600&bis=1425164399&anz=10&format=json
 
 ## RSS
 ```{r}
