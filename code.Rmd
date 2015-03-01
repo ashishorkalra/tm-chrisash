@@ -130,8 +130,13 @@ dpp.data.object <- fromJSON(print(quote=F,dpp.data))
 
 convert to data frame
 ```{r}
-apa.data.frame <- as.data.frame(apa.data.object)
-dpp.data.frame <- as.data.frame(dpp.data.object)
+#first replace NULL to tilda (this is a very big shit) because conversion to data frame was giving unexpected error because of NULL
+apa.data.object$ergebnisse <- lapply(apa.data.object$ergebnisse, lapply, function(x)ifelse(is.null(x), "~", x))
+
+dpp.data.object$content <- lapply(dpp.data.object$content, lapply, function(x)ifelse(is.null(x), "~", x))
+
+apa.data.frame <- as.data.frame(apa.data.object$ergebnisse)
+dpp.data.frame <- as.data.frame(dpp.data.object$content)
 
 ```
 
@@ -151,5 +156,5 @@ dpp.data.frame <- as.data.frame(dpp.data.object)
 - consolidate all functions to 1.read data 2.write to dataframe/corpus (Ashish)
   - data frame conversion (done)
 - apa news does not contain body of article (remaining) (chris to confirm with apa)
-- quality of data from apa is not right, some time it is giving error for conversion to data frame (need to look into characters of data from apa) (ashish)
+- quality of data from apa is not right, some time it is giving error for conversion to data frame (need to look into characters of data from apa) (done)
 - create a package out of this (?)
