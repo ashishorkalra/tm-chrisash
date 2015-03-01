@@ -79,6 +79,11 @@ language = switch(lang,
                 "&bis=", to,                  # unix time stamp
                 "&anz=", number,              # mind. , standard , max.
                 "&format=", format,           # json, rss
+                "&felder=",                   # specify fields to display
+                "HEADER+STICHWORT+",
+                "TITEL+INHALT+DATUM+",
+                "ZEITSTEMPEL+EMITTENT+",
+                "EMITTENTID+SCHLUESSEL",
                 sep = "")
 
 return(apa.url)
