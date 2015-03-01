@@ -85,7 +85,7 @@ return(apa.url)
 }
 
 dpp.query = function(AppID, limit = 50, start = 0, 
-                     format = "json", lang = "en", teaser = 1){
+                     format = "json", lang = "en", teaser = 0){
                      
   
   dpp.url = paste("http://api.presseportal.de/api/ir/adhoc?api_key=", AppID,
