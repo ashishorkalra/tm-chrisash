@@ -114,16 +114,24 @@ dpp.data = load.data(url = dpp.url, format = "json",
 ```
 
 
-Write to Data Frame
+Write to r object
 As per the expectation, the data is in apa.data and dpp.data.
 ```{r}
 
 load.package(rjson)
 require(rjson)
 
-apa.data.json <- fromJSON(print(quote=F,apa.data))
+apa.data.object <- fromJSON(print(quote=F,apa.data))
 
-dpp.data.json <- fromJSON(print(quote=F,dpp.data))
+dpp.data.object <- fromJSON(print(quote=F,dpp.data))
+
+```
+
+
+convert to data frame
+```{r}
+apa.data.frame <- as.data.frame(apa.data.object)
+dpp.data.frame <- as.data.frame(dpp.data.object)
 
 ```
 
@@ -141,4 +149,7 @@ dpp.data.json <- fromJSON(print(quote=F,dpp.data))
   - option to load xml or json (done)
   - number of entries or time horizon (done)
 - consolidate all functions to 1.read data 2.write to dataframe/corpus (Ashish)
+  - data frame conversion (done)
+- apa news does not contain body of article (remaining) (chris to confirm with apa)
+- quality of data from apa is not right, some time it is giving error for conversion to data frame (need to look into characters of data from apa) (ashish)
 - create a package out of this (?)
