@@ -111,16 +111,10 @@ apa.data = load.data(url = apa.url, format = "json",
                      file.name = "apa.test", overwrite = F)
 dpp.data = load.data(url = dpp.url, format = "json", 
                      file.name = "dpp.test", overwrite = F)
-
-# 3. write to dataframe
-load.package(jsonlite)
-
-# apa.dataframe =  fromJSON(print(quote=F, apa.data))
-# dpp.dataframe =  fromJSON(print(quote=F, dpp.data))
 ```
 
 
-
+Write to Data Frame
 As per the expectation, the data is in apa.data and dpp.data.
 ```{r}
 
