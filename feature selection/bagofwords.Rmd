@@ -1,0 +1,38 @@
+---
+title: "bagofwords"
+author: "ashish"
+date: "Saturday, March 14, 2015"
+output: html_document
+---
+
+```{r}
+load.package = function(package.name){
+  package.name = as.character(substitute(package.name))
+  if(require(package.name, character.only = TRUE)) { 
+    message(paste(package.name, ' loaded', sep = ""))
+  } else {
+    install.packages(package.name)
+  }
+}
+```
+
+
+package qdap available for words splitting
+
+three functions are available in the package.
+
+1. bag.o.words - Reduces a text column to a bag of words.
+
+2. breaker - Reduces a text column to a bag of words and qdap recognized end marks.
+
+3. word.split - Reduces a text column to a list of vectors of bag of words and qdap recognized end marks (i.e., ".", "!", "?", "*", "-")
+
+test bag of words
+
+```{r}
+load.package("qdap")
+output.bag.of.words <- bag.o.words("This is Ashish Kalra. I am studying in WU. And doing ! nothing else !")
+output.bag.of.words
+```
+
+
